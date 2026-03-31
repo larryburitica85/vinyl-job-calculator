@@ -3,50 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinyl Job Quote Calculator</title>
+
+<title>Vinyl Job Quote</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+
+body{
+font-family: Arial, sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
-.container {
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 12px;
-    width: 320px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+
+.container{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
+width:340px;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
 }
-h2 {
-    text-align: center;
+
+h2{
+text-align:center;
+margin-bottom:20px;
 }
-input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 6px;
-    border: none;
+
+label{
+margin-top:10px;
+display:block;
 }
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    background: #22c55e;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
+
+input, select{
+width:100%;
+padding:10px;
+margin-top:5px;
+border-radius:6px;
+border:none;
 }
-.result {
-    margin-top: 20px;
-    font-size: 20px;
-    text-align: center;
+
+button{
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#22c55e;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
 }
+
+.result{
+margin-top:20px;
+font-size:22px;
+text-align:center;
+}
+
+.small{
+font-size:12px;
+opacity:.7;
+text-align:center;
+}
+
 </style>
 
 </head>
@@ -54,44 +74,72 @@ button {
 <body>
 
 <div class="container">
-<h2>Vinyl Quote Calculator</h2>
 
-<label>Width (feet)</label>
+<h2>Vinyl Quote</h2>
+
+<label>Width</label>
 <input type="number" id="width" placeholder="Enter width">
 
-<label>Height (feet)</label>
+<label>Height</label>
 <input type="number" id="height" placeholder="Enter height">
 
-<label>Price per sq ft ($)</label>
-<input type="number" id="price" value="6">
+<label>Units</label>
+<select id="units">
+<option value="ft">Feet</option>
+<option value="in">Inches</option>
+<option value="cm">Centimeters</option>
+</select>
 
-<label>Minimum job price ($)</label>
-<input type="number" id="minimum" value="80">
+<label>
+<input type="checkbox" id="removal">
+ Removal Needed (+$40)
+</label>
 
-<button onclick="calculateQuote()">Calculate</button>
+<button onclick="calculateQuote()">Get Estimate</button>
 
 <div class="result" id="result">$0</div>
+
+<div class="small">Final price may vary based on design complexity</div>
+
 </div>
 
 <script>
-function calculateQuote() {
+
+function convertToFeet(value, unit){
+
+if(unit === "ft") return value;
+
+if(unit === "in") return value / 12;
+
+if(unit === "cm") return value / 30.48;
+
+}
+
+function calculateQuote(){
 
 let width = parseFloat(document.getElementById("width").value) || 0;
 let height = parseFloat(document.getElementById("height").value) || 0;
-let price = parseFloat(document.getElementById("price").value) || 0;
-let minimum = parseFloat(document.getElementById("minimum").value) || 0;
+let unit = document.getElementById("units").value;
+let removal = document.getElementById("removal").checked;
 
-let sqft = width * height;
-let total = sqft * price;
+let widthFeet = convertToFeet(width, unit);
+let heightFeet = convertToFeet(height, unit);
 
-if (total < minimum) {
-    total = minimum;
+let sqft = widthFeet * heightFeet;
+
+let pricePerSqFt = 20;
+
+let total = sqft * pricePerSqFt;
+
+if(removal){
+total += 40;
 }
 
 document.getElementById("result").innerHTML =
-"$" + total.toFixed(2) + "<br><small>" +
-sqft.toFixed(2) + " sq ft</small>";
+"$" + total.toFixed(2);
+
 }
+
 </script>
 
 </body>
